@@ -1,0 +1,38 @@
+
+server:
+  port: 8087
+
+spring:
+  application:
+    name: USER-SERVICE
+
+  datasource:
+    username: postgres
+    password: 1402
+    url: jdbc:postgresql://localhost:5433/user_service
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  client:
+    service-url:
+      defaultUrl: ${EUREKA.URI:http://localhost:8761/eureka/}
+    instance:
+      preferIpAddress: true
+
+services:
+  auth-url: http://AUTHORIZATION-SERVICE/auth
+  notification-url: http://NOTIFICATION-SERVICE/notification
+
+jwt:
+  secret:
+    key:  753778214125442A472D4B6150645367566B59703373367639792F423F452848
+  access:
+    expiry: 3000000
+  refresh:
+    expiry: 3000000
