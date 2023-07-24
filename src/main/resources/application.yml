@@ -26,7 +26,6 @@ eureka:
       preferIpAddress: true
 
 services:
-  auth-url: http://AUTHORIZATION-SERVICE/auth
   notification-url: http://NOTIFICATION-SERVICE/notification
 
 jwt:
