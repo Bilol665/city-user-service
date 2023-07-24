@@ -1,6 +1,65 @@
 package uz.pdp.cityuserservice.domain.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import uz.pdp.cityuserservice.domain.entity.BaseEntity;
 
-public class UserEntity extends BaseEntity {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+@Entity(name = "users")
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
+public class UserEntity extends BaseEntity implements UserDetails {
+    private String name;
+    private String email;
+    private String password;
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<RoleEntity> roles;
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<PermissionEntity> permissions;
+    private UserState state;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        roles.forEach((role) -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole())));
+        permissions.forEach((permission) -> authorities.add(new SimpleGrantedAuthority("PERMISSION_" + permission.getPermission())));
+        return authorities;
+    }
+    @Override
+    public String getPassword() {
+        return password;
+    }
+    @Override
+    public String getUsername() {
+        return email;
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
