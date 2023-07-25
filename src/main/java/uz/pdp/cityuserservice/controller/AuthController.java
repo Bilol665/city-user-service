@@ -14,6 +14,8 @@ import uz.pdp.cityuserservice.domain.entity.user.UserEntity;
 import uz.pdp.cityuserservice.exceptions.RequestValidationException;
 import uz.pdp.cityuserservice.service.user.UserService;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user/api/v1/auth")
@@ -42,5 +44,13 @@ public class AuthController {
             @RequestBody ResetPasswordDto resetPasswordDto
     ) {
         return ResponseEntity.ok(userService.resetPassword(email, resetPasswordDto));
+}
+    @PostMapping("/verify/{userId}")
+    public String verify(
+            @PathVariable UUID userId,
+            @RequestParam String code
+    ){
+        return userService.verify(userId,code);
+
     }
 }
