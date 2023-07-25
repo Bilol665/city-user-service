@@ -31,7 +31,7 @@ public class MailService {
     public void sendVerificationCode(UserEntity user) {
         int i = random.nextInt(10000);
         VerificationEntity verificationEntity = verificationRepository.findVerificationEntityByUserId(user.getId()).orElseGet(
-                () -> verificationRepository.save(new VerificationEntity("http://localhost:8086/user/verify/" + user.getId() + "?verificationCode="+i,user, (long) i))
+                () -> verificationRepository.save(new VerificationEntity("http://localhost:8081/user/api/v1/auth/verify/" + user.getId(),user,(long) i))
         );
         String message = "This is your verification code to Business management service "
                 +verificationEntity.getCode()+"\nThis code will be expired in 10 minutes.\nUse this link to verify "
