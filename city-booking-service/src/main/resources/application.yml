@@ -1,0 +1,43 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: BOOKING-SERVICE
+
+  datasource:
+    username: postgres
+    password: 2006
+    url: jdbc:postgresql://localhost:5432/booking_service
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  client:
+    service-url:
+      defaultUrl: ${EUREKA.URI:http://localhost:8761/eureka/}
+    instance:
+      preferIpAddress: true
+
+services:
+  accommodation-url: http://ACCOMMODATION-SERVICE/accommodation/
+  payment-url: http://PAYMENT-SERVICE/payment/
+  notification-url: http://NOTIFICATION-SERVICE/notification/
+  user-service-url: http://USER-SERVICE/user/
+
+
+
+jwt:
+  secret:
+    key:  753778214125442A472D4B6150645367566B59703373367639792F423F452848
+  access:
+    expiry: 3000000
+  refresh:
+    expiry: 3000000
+
+
