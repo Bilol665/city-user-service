@@ -14,22 +14,28 @@ import uz.pdp.cityuserservice.domain.entity.user.PermissionEntity;
 import uz.pdp.cityuserservice.domain.entity.user.RoleEntity;
 import uz.pdp.cityuserservice.domain.entity.user.UserEntity;
 import uz.pdp.cityuserservice.domain.entity.user.UserState;
+import uz.pdp.cityuserservice.domain.entity.verification.VerificationEntity;
 import uz.pdp.cityuserservice.exceptions.AuthFailedException;
 import uz.pdp.cityuserservice.exceptions.DataNotFoundException;
 import uz.pdp.cityuserservice.exceptions.NotAcceptable;
+import uz.pdp.cityuserservice.repository.VerificationRepository;
 import uz.pdp.cityuserservice.repository.user.PermissionRepository;
 import uz.pdp.cityuserservice.repository.user.RoleRepository;
 import uz.pdp.cityuserservice.repository.user.UserRepository;
 import uz.pdp.cityuserservice.service.auth.JwtService;
 import uz.pdp.cityuserservice.service.mail.MailService;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository userRoleRepository;
+    private final VerificationRepository verificationRepository;
     private final PermissionRepository permissionRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
@@ -74,5 +80,22 @@ public class UserService implements UserDetailsService {
                     .build();
         }
         throw new AuthFailedException("Wrong credentials!");
+    }
+
+    public String verify(UUID userId, String code) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User Not found"));
+        VerificationEntity verificationEntity = verificationRepository.findVerificationEntityByUserId(userId)
+                .orElseThrow(() -> new DataNotFoundException("Verification code not found"));
+        if (Objects.equals(code,verificationEntity.getCode().toString())){
+            if (verificationEntity.getCreatedTime().plusMinutes(10).isAfter(LocalDateTime.now())){
+                verificationRepository.delete(verificationEntity);
+                user.setState(UserState.ACTIVE);
+                userRepository.save(user);
+                return "Successfully verified!";
+            }
+            return "Verification Code Expired1";
+        }
+        return "Wrong Verification Code!";
     }
 }

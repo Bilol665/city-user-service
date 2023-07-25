@@ -12,6 +12,8 @@ import uz.pdp.cityuserservice.domain.entity.user.UserEntity;
 import uz.pdp.cityuserservice.exceptions.RequestValidationException;
 import uz.pdp.cityuserservice.service.user.UserService;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user/api/v1/auth")
@@ -30,5 +32,13 @@ public class AuthController {
             @RequestBody LoginDto loginDto
     ) {
         return ResponseEntity.ok(userService.login(loginDto));
+    }
+
+    @PostMapping("/verify/{userId}")
+    public String verify(
+            @PathVariable UUID userId,
+            @RequestParam String code
+    ){
+        return userService.verify(userId,code);
     }
 }
