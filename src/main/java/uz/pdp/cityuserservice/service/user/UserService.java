@@ -86,16 +86,23 @@ public class UserService implements UserDetailsService {
         }
         throw new AuthFailedException("Wrong credentials!");
     }
-
-    public ApiResponse resetPassword(String email,ResetPasswordDto resetPasswordDto){
-       UserEntity user = userRepository.findUserEntityByEmail(email).
-                orElseThrow(()-> new DataNotFoundException("User do not exist"));
-       if(!Objects.equals(resetPasswordDto.getNewPassword(),resetPasswordDto.getConfirmPassword())){
-           throw new NotAcceptable("Both passwords must be same");
+    public ApiResponse resetPassword(UUID userId) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(
+                () -> new DataNotFoundException("User not found!")
+        );
+        mailService.sendResetPassword(user.getEmail());
+        return new ApiResponse(HttpStatus.OK,true,"Success");
+    }
+    public ApiResponse resetPassword(String email,ResetPasswordDto resetPasswordDto) {
+        UserEntity user = userRepository.findUserEntityByEmail(email).
+                orElseThrow(() -> new DataNotFoundException("User do not exist"));
+        if (!Objects.equals(resetPasswordDto.getNewPassword(), resetPasswordDto.getConfirmPassword())) {
+            throw new NotAcceptable("Both passwords must be same");
         }
-        user.setPassword(resetPasswordDto.getNewPassword());
-       return new ApiResponse(HttpStatus.OK,true,"success");
-}
+        user.setPassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
+        userRepository.save(user);
+        return new ApiResponse(HttpStatus.OK, true, "success");
+    }
 
     public String verify(UUID userId, String code) {
         UserEntity user = userRepository.findById(userId)

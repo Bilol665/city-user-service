@@ -3,7 +3,6 @@ package uz.pdp.cityuserservice.domain.entity.user;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import uz.pdp.cityuserservice.domain.entity.BaseEntity;
 
 import java.util.List;
 
@@ -14,7 +13,8 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-public class RoleEntity extends BaseEntity {
+public class RoleEntity  {
+    @Id
     @Column(unique = true)
     String role;
     @ManyToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)

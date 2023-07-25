@@ -24,6 +24,7 @@ public class RoleService {
     public RoleEntity save(RoleDto roleDto){
         RoleEntity role = modelMapper.map(roleDto, RoleEntity.class);
         role.setPermissions(getPermission(roleDto.getPermission()));
+        role.setRole("ROLE_" + roleDto.getRole());
         return roleRepository.save(role);
     }
 

@@ -1,10 +1,7 @@
 package uz.pdp.cityuserservice.domain.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,15 +23,16 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private String name;
     private String email;
     private String password;
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     private List<RoleEntity> roles;
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     private List<PermissionEntity> permissions;
+    @Enumerated(EnumType.STRING)
     private UserState state;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        roles.forEach((role) -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole())));
+        roles.forEach((role) -> authorities.add(new SimpleGrantedAuthority(role.getRole())));
         permissions.forEach((permission) -> authorities.add(new SimpleGrantedAuthority("PERMISSION_" + permission.getPermission())));
         return authorities;
     }
