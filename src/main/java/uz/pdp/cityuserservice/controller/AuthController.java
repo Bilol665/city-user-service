@@ -38,19 +38,24 @@ public class AuthController {
         return ResponseEntity.ok(userService.login(loginDto));
     }
 
-    @PutMapping("changePassword/{email}")
+    @GetMapping("/reset-password/{userId}")
+    public ResponseEntity<ApiResponse> resetPassword(
+            @PathVariable UUID userId
+    ){
+        return ResponseEntity.ok(userService.resetPassword(userId));
+    }
+    @PutMapping("/changePassword/{email}")
     public ResponseEntity<ApiResponse> changePassword(
             @PathVariable String email,
             @RequestBody ResetPasswordDto resetPasswordDto
     ) {
         return ResponseEntity.ok(userService.resetPassword(email, resetPasswordDto));
-}
+    }
     @PostMapping("/verify/{userId}")
     public String verify(
             @PathVariable UUID userId,
             @RequestParam String code
     ){
         return userService.verify(userId,code);
-
     }
 }

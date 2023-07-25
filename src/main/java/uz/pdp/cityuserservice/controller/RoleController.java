@@ -3,7 +3,6 @@ package uz.pdp.cityuserservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.cityuserservice.domain.dto.RoleDto;
 import uz.pdp.cityuserservice.domain.entity.user.RoleEntity;
@@ -19,6 +18,7 @@ public class RoleController {
     private final RoleService roleService;
 
     @PostMapping("/save")
+//    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<RoleEntity>saveRole(
             @RequestBody RoleDto roleDto
     ){
