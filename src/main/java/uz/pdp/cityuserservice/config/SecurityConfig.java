@@ -22,12 +22,14 @@ public class SecurityConfig {
     private final UserService auth;
     private final String[] usersOnly = {"/user/"};
     private final String[] permitALl = {"/user/auth/"};
+    private final String[] super_admin_only={"/user/role/save","/user/role/getRole","/user/role/{id}/updateRole","/user/role/{id}/deleteRole"};
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/user/api/v1/auth/**").permitAll()
+                .requestMatchers(super_admin_only).permitAll()
                 .and()
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();

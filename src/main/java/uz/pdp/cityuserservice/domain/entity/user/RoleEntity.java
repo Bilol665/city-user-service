@@ -1,9 +1,6 @@
 package uz.pdp.cityuserservice.domain.entity.user;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import uz.pdp.cityuserservice.domain.entity.BaseEntity;
@@ -18,7 +15,8 @@ import java.util.List;
 @Getter
 @Builder
 public class RoleEntity extends BaseEntity {
+    @Column(unique = true)
     String role;
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     List<PermissionEntity> permissions;
 }
