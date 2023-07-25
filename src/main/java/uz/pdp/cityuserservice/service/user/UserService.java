@@ -1,14 +1,18 @@
 package uz.pdp.cityuserservice.service.user;
 
 import lombok.RequiredArgsConstructor;
+
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.pdp.cityuserservice.domain.dto.LoginDto;
+import uz.pdp.cityuserservice.domain.dto.ResetPasswordDto;
 import uz.pdp.cityuserservice.domain.dto.UserRequestDto;
+import uz.pdp.cityuserservice.domain.dto.response.ApiResponse;
 import uz.pdp.cityuserservice.domain.dto.response.JwtResponse;
 import uz.pdp.cityuserservice.domain.entity.user.PermissionEntity;
 import uz.pdp.cityuserservice.domain.entity.user.RoleEntity;
@@ -28,6 +32,7 @@ import uz.pdp.cityuserservice.service.mail.MailService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+
 import java.util.UUID;
 
 @Service
@@ -82,6 +87,16 @@ public class UserService implements UserDetailsService {
         throw new AuthFailedException("Wrong credentials!");
     }
 
+    public ApiResponse resetPassword(String email,ResetPasswordDto resetPasswordDto){
+       UserEntity user = userRepository.findUserEntityByEmail(email).
+                orElseThrow(()-> new DataNotFoundException("User do not exist"));
+       if(!Objects.equals(resetPasswordDto.getNewPassword(),resetPasswordDto.getConfirmPassword())){
+           throw new NotAcceptable("Both passwords must be same");
+        }
+        user.setPassword(resetPasswordDto.getNewPassword());
+       return new ApiResponse(HttpStatus.OK,true,"success");
+}
+
     public String verify(UUID userId, String code) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("User Not found"));
@@ -97,5 +112,6 @@ public class UserService implements UserDetailsService {
             return "Verification Code Expired1";
         }
         return "Wrong Verification Code!";
+
     }
 }
