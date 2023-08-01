@@ -58,6 +58,7 @@ public class UserService implements UserDetailsService {
         user.setRoles(getRoleFromString(userRequestDto.getRoles()));
         user.setPermissions(getPermissionFromString(userRequestDto.getPermissions()));
         user.setState(UserState.UNVERIFIED);
+        user.setAttempts(0);
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
         UserEntity savedUser = userRepository.save(user);
         mailService.sendVerificationCode(savedUser);
@@ -109,16 +110,22 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new DataNotFoundException("User Not found"));
         VerificationEntity verificationEntity = verificationRepository.findVerificationEntityByUserId(userId)
                 .orElseThrow(() -> new DataNotFoundException("Verification code not found"));
-        if (Objects.equals(code,verificationEntity.getCode().toString())){
-            if (verificationEntity.getCreatedTime().plusMinutes(10).isAfter(LocalDateTime.now())){
-                verificationRepository.delete(verificationEntity);
-                user.setState(UserState.ACTIVE);
-                userRepository.save(user);
-                return "Successfully verified!";
+        if (user.getAttempts()!=3) {
+            if (Objects.equals(code, verificationEntity.getCode().toString())) {
+                if (verificationEntity.getCreatedTime().plusMinutes(10).isAfter(LocalDateTime.now())) {
+                    verificationRepository.delete(verificationEntity);
+                    user.setState(UserState.ACTIVE);
+                    userRepository.save(user);
+                    return "Successfully verified!";
+                }
+                return "Verification Code Expired!";
             }
-            return "Verification Code Expired1";
+            user.setAttempts(user.getAttempts() + 1);
+            userRepository.save(user);
+            return "Wrong Verification Code!";
         }
-        return "Wrong Verification Code!";
-
+        user.setState(UserState.BLOCKED);
+        userRepository.save(user);
+        return "Too many failed attempts. You have been blocked!";
     }
 }
