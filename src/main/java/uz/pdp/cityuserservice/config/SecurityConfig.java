@@ -11,6 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import uz.pdp.cityuserservice.filter.JwtFilterToken;
+import uz.pdp.cityuserservice.service.auth.AuthenticationService;
+import uz.pdp.cityuserservice.service.auth.JwtService;
 import uz.pdp.cityuserservice.service.user.UserService;
 
 @Configuration
@@ -20,6 +24,8 @@ import uz.pdp.cityuserservice.service.user.UserService;
 public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final UserService auth;
+    private final JwtService jwtService;
+    private final AuthenticationService authenticationService;
     private final String[] usersOnly = {"/user/"};
     private final String[] permitALl = {"/user/auth/"};
     private final String[] super_admin_only={"/user/role/save","/user/role/getRole","/user/role/{id}/updateRole","/user/role/{id}/deleteRole"};
@@ -32,6 +38,8 @@ public class SecurityConfig {
                 .requestMatchers(super_admin_only).permitAll()
                 .and()
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JwtFilterToken(jwtService,authenticationService),
+                        UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
