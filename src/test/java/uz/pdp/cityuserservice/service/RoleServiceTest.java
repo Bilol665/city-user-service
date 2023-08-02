@@ -13,6 +13,7 @@ import uz.pdp.cityuserservice.repository.user.RoleRepository;
 import uz.pdp.cityuserservice.service.role.RoleService;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -57,4 +58,13 @@ class RoleServiceTest {
 
     }
 
+    @Test
+    void deleteTest(){
+        when(roleRepository.findById(roleEntity.getRole())).thenReturn(Optional.of(roleEntity));
+        doNothing().when(roleRepository).deleteById(roleEntity.getRole());
+
+        roleService.deleteById(roleEntity.getRole());
+
+        verify(roleRepository,times(1));
+    }
 }
