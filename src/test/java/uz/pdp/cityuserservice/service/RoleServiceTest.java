@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import uz.pdp.cityuserservice.domain.dto.RoleDto;
 import uz.pdp.cityuserservice.domain.entity.user.PermissionEntity;
 import uz.pdp.cityuserservice.domain.entity.user.RoleEntity;
+import uz.pdp.cityuserservice.exceptions.DataNotFoundException;
 import uz.pdp.cityuserservice.repository.user.PermissionRepository;
 import uz.pdp.cityuserservice.repository.user.RoleRepository;
 import uz.pdp.cityuserservice.service.role.RoleService;
@@ -37,7 +38,8 @@ class RoleServiceTest {
     @BeforeEach
     void setUp() {
         initMocks(this);
-        PermissionEntity tester = permissionRepository.save(PermissionEntity.builder().permission("TESTER").build());
+        PermissionEntity tester = PermissionEntity.builder()
+                .permission("TESTER").build();
         roleDto = new RoleDto(name, List.of("TESTER"));
         roleEntity = RoleEntity.builder()
                 .role(name)
@@ -66,5 +68,12 @@ class RoleServiceTest {
         roleService.deleteById(roleEntity.getRole());
 
         verify(roleRepository,times(1));
+    }
+
+    @Test
+    void update(){
+        when(roleRepository.findById(name)).thenReturn(Optional.empty());
+        assertThrows(DataNotFoundException.class,()->roleService.update(roleEntity.getRole(),roleDto));
+
     }
 }

@@ -61,7 +61,7 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         initMocks(this);
-        permissionRepository.save(PermissionEntity.builder().permission("ALL").build());
+        PermissionEntity all = PermissionEntity.builder().permission("ALL").build();
         roleRepository.save(RoleEntity.builder().role("ADMIN").permissions(List.of()).build());
         userRequestDto= new UserRequestDto("user",email,password,List.of("ADMIN"),List.of("ALL"));
         userEntity=UserEntity.builder()
