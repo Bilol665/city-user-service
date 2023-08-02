@@ -20,7 +20,6 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
-    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -29,20 +28,18 @@ public class DataLoader implements CommandLineRunner {
     private String ddlMode;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (Objects.equals(ddlMode, "update")) {
-            RoleEntity superAdmin = roleRepository.save(new RoleEntity(
-                    "ROLE_SUPER_ADMIN",(permissionRepository.findAll())
-            ));
-
-             userRepository.save(new UserEntity(
-                    "admin",
-                    "admin@gmail.com",
-                    passwordEncoder.encode("admin"),
-                    List.of(superAdmin),
-                    permissionRepository.findAll(),
-                    UserState.ACTIVE
-            ));
+            if (userRepository.findUserEntityByEmail("admin@gmail.com").isEmpty()) {
+                userRepository.save(new UserEntity(
+                        "admin",
+                        "admin@gmail.com",
+                        passwordEncoder.encode("admin"),
+                        List.of(new RoleEntity("ROLE_SUPER_ADMIN", permissionRepository.findAll())),
+                        permissionRepository.findAll(),
+                        UserState.ACTIVE
+                ));
+            }
         }
     }
 }

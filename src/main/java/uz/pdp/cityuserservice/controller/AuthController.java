@@ -3,11 +3,14 @@ package uz.pdp.cityuserservice.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.cityuserservice.domain.dto.LoginDto;
 import uz.pdp.cityuserservice.domain.dto.ResetPasswordDto;
 import uz.pdp.cityuserservice.domain.dto.UserRequestDto;
+import uz.pdp.cityuserservice.domain.dto.Username;
 import uz.pdp.cityuserservice.domain.dto.response.ApiResponse;
 import uz.pdp.cityuserservice.domain.dto.response.JwtResponse;
 import uz.pdp.cityuserservice.domain.entity.user.UserEntity;
@@ -23,6 +26,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/sign-up")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<UserEntity> signUp(
             @Valid @RequestBody UserRequestDto userCreateDto,
             BindingResult bindingResult
@@ -52,10 +56,17 @@ public class AuthController {
         return ResponseEntity.ok(userService.resetPassword(email, resetPasswordDto));
     }
     @PostMapping("/verify/{userId}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public String verify(
             @PathVariable UUID userId,
             @RequestParam String code
     ){
         return userService.verify(userId,code);
+    }
+    @GetMapping("/get")
+    public ResponseEntity<UserDetails> getUser(
+            @RequestBody Username username
+    ) {
+        return ResponseEntity.ok(userService.loadUserByUsername(username.getUsername()));
     }
 }
