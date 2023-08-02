@@ -30,18 +30,18 @@ public class RoleController {
         return ResponseEntity.ok(roleService.getAll());
     }
 
-    @DeleteMapping("/{id}/deleteRole")
+    @DeleteMapping("/{name}/deleteRole")
     public ResponseEntity<HttpStatus>deleteRole(
-            @PathVariable UUID id
+            @PathVariable String name
     ){
-        roleService.deleteById(id);
+        roleService.deleteById(name);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @PutMapping("/{id}/updateRole")
+    @PutMapping("/{name}/updateRole")
     public ResponseEntity<RoleEntity>updateRole(
             @RequestBody RoleDto roleDto,
-            @PathVariable UUID id
+            @PathVariable String name
     ){
-        return ResponseEntity.ok(roleService.update(id,roleDto));
+        return ResponseEntity.ok(roleService.update(name,roleDto));
     }
 }

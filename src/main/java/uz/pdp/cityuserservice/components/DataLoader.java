@@ -41,7 +41,8 @@ public class DataLoader implements CommandLineRunner {
                     passwordEncoder.encode("admin"),
                     List.of(superAdmin),
                     permissionRepository.findAll(),
-                    UserState.ACTIVE
+                    UserState.ACTIVE,
+                     0
             ));
         }
     }

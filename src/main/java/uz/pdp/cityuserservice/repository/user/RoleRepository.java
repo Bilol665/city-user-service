@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface RoleRepository extends JpaRepository<RoleEntity, UUID> {
+public interface RoleRepository extends JpaRepository<RoleEntity, String> {
     List<RoleEntity> findRoleEntitiesByRoleIn(List<String> roles);
+
 }
