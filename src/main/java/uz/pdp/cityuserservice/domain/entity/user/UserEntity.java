@@ -29,6 +29,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private List<PermissionEntity> permissions;
     @Enumerated(EnumType.STRING)
     private UserState state;
+    private int attempts;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();

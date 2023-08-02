@@ -36,14 +36,14 @@ public class RoleService {
         return roleRepository.findAll();
     }
 
-    public void deleteById(UUID id){
-        RoleEntity role = roleRepository.findById(id)
+    public void deleteById(String name){
+        RoleEntity role = roleRepository.findById(name)
                 .orElseThrow(()->new DataNotFoundException("Role not found"));
         roleRepository.delete(role);
     }
 
-    public RoleEntity update(UUID id,RoleDto roleDto){
-        RoleEntity role = roleRepository.findById(id)
+    public RoleEntity update(String name ,RoleDto roleDto){
+        RoleEntity role = roleRepository.findById(name)
                 .orElseThrow(()->new DataNotFoundException("Role not found"));
         modelMapper.map(roleDto,role);
         return roleRepository.save(role);
