@@ -6,10 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.cityuserservice.domain.dto.LoginDto;
-import uz.pdp.cityuserservice.domain.dto.ResetPasswordDto;
-import uz.pdp.cityuserservice.domain.dto.UserRequestDto;
-import uz.pdp.cityuserservice.domain.dto.Username;
+import uz.pdp.cityuserservice.domain.dto.*;
 import uz.pdp.cityuserservice.domain.dto.response.ApiResponse;
 import uz.pdp.cityuserservice.domain.dto.response.JwtResponse;
 import uz.pdp.cityuserservice.domain.entity.user.UserEntity;
@@ -67,5 +64,12 @@ public class AuthController {
             @RequestBody Username username
     ) {
         return ResponseEntity.ok(userService.loadUserByUsername(username.getUsername()));
+    }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<UserEntity> getUserById(
+            @PathVariable UUID id
+    ) {
+        return ResponseEntity.ok(userService.loadByUserId(id));
     }
 }

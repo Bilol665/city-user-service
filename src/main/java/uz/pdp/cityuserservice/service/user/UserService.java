@@ -128,4 +128,8 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
         return "Too many failed attempts. You have been blocked!";
     }
+
+    public UserEntity loadByUserId(UUID id){
+        return userRepository.getReferenceById(id);
+    }
 }
