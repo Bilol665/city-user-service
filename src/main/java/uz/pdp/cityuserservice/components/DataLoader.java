@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import uz.pdp.cityuserservice.domain.entity.user.PermissionEntity;
 import uz.pdp.cityuserservice.domain.entity.user.RoleEntity;
 import uz.pdp.cityuserservice.domain.entity.user.UserEntity;
 import uz.pdp.cityuserservice.domain.entity.user.UserState;
@@ -28,7 +29,10 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        RoleEntity roleEntity = new RoleEntity("ROLE_SUPER_ADMIN",permissionRepository.findAll());
+        PermissionEntity permission = new PermissionEntity();
+        permission.setPermission("ALL");
+        permissionRepository.save(permission);
+        RoleEntity roleEntity = new RoleEntity("SUPER_ADMIN");
         if(roleRepository.findById(roleEntity.getRole()).isPresent()) {
             roleEntity = roleRepository.findById(roleEntity.getRole()).get();
         }
@@ -39,7 +43,7 @@ public class DataLoader implements CommandLineRunner {
                         "admin@gmail.com",
                         passwordEncoder.encode("admin"),
                         List.of(roleEntity),
-                        permissionRepository.findAll(),
+//                        List.of(permission),
                         UserState.ACTIVE,
                         0
                 ));

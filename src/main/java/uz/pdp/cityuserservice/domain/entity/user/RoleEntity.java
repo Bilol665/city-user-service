@@ -1,10 +1,10 @@
 package uz.pdp.cityuserservice.domain.entity.user;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Entity(name = "roles")
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -17,6 +17,6 @@ public class RoleEntity  {
     @Id
     @Column(unique = true)
     String role;
-    @ManyToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
-    List<PermissionEntity> permissions;
+//    @ManyToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+//    List<PermissionEntity> permissions;
 }
