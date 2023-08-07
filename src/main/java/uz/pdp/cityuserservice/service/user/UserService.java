@@ -55,6 +55,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findUserEntityByEmail(username)
                 .orElseThrow(()-> new DataNotFoundException("User Not Found!"));
     }
+
+    public UserEntity getUserById(UUID id){
+        return userRepository.findUserEntityById(id)
+                .orElseThrow(()->new DataNotFoundException("User not found"));
+    }
     public UserEntity signUp(UserRequestDto userRequestDto) {
         UserEntity user = modelMapper.map(userRequestDto, UserEntity.class);
         if(checkEmail(user.getEmail())) throw new NotAcceptable("Email already exists!");

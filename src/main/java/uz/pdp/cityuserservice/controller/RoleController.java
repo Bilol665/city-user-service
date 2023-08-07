@@ -37,6 +37,7 @@ public class RoleController {
         roleService.deleteById(name);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @PutMapping("/{name}/updateRole")
     public ResponseEntity<RoleEntity>updateRole(
             @RequestBody RoleDto roleDto,
