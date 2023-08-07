@@ -1,7 +1,6 @@
 package uz.pdp.cityuserservice.service.user;
 
 import lombok.RequiredArgsConstructor;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +31,6 @@ import uz.pdp.cityuserservice.service.mail.MailService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-
 import java.util.UUID;
 
 @Service
@@ -52,11 +50,16 @@ public class UserService implements UserDetailsService {
                 () -> new DataNotFoundException("User not found!")
         );
     }
+
+    public UserEntity getUser(String username){
+        return userRepository.findUserEntityByEmail(username)
+                .orElseThrow(()-> new DataNotFoundException("User Not Found!"));
+    }
     public UserEntity signUp(UserRequestDto userRequestDto) {
         UserEntity user = modelMapper.map(userRequestDto, UserEntity.class);
         if(checkEmail(user.getEmail())) throw new NotAcceptable("Email already exists!");
         user.setRoles(getRoleFromString(userRequestDto.getRoles()));
-        user.setPermissions(getPermissionFromString(userRequestDto.getPermissions()));
+//        user.setPermissions(getPermissionFromString(userRequestDto.getPermissions()));
         user.setState(UserState.UNVERIFIED);
         user.setAttempts(0);
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));

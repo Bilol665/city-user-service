@@ -68,4 +68,11 @@ public class AuthController {
     ) {
         return ResponseEntity.ok(userService.loadUserByUsername(username.getUsername()));
     }
+
+    @GetMapping("/get/user")
+    public ResponseEntity<UserEntity> get(
+            @RequestParam String username
+    ){
+        return ResponseEntity.ok(userService.getUser(username));
+    }
 }
