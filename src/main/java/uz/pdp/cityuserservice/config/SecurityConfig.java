@@ -36,6 +36,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/user/api/v1/auth/**").permitAll()
                 .requestMatchers(super_admin_only).permitAll()
+                .anyRequest().permitAll()
                 .and()
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtFilterToken(jwtService,authenticationService),

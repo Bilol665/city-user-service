@@ -10,8 +10,8 @@ import uz.pdp.cityuserservice.domain.entity.user.RoleEntity;
 import uz.pdp.cityuserservice.exceptions.DataNotFoundException;
 import uz.pdp.cityuserservice.repository.user.PermissionRepository;
 import uz.pdp.cityuserservice.repository.user.RoleRepository;
+
 import java.util.List;
-import java.util.UUID;
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ public class RoleService {
 
     public RoleEntity save(RoleDto roleDto){
         RoleEntity role = modelMapper.map(roleDto, RoleEntity.class);
-        role.setPermissions(getPermission(roleDto.getPermission()));
+//        role.setPermissions(getPermission(roleDto.getPermission()));
         role.setRole("ROLE_" + roleDto.getRole());
         return roleRepository.save(role);
     }
