@@ -8,12 +8,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import uz.pdp.cityuserservice.domain.dto.LoginDto;
 import uz.pdp.cityuserservice.domain.dto.UserRequestDto;
-import uz.pdp.cityuserservice.domain.entity.user.PermissionEntity;
 import uz.pdp.cityuserservice.domain.entity.user.RoleEntity;
 import uz.pdp.cityuserservice.domain.entity.user.UserEntity;
 import uz.pdp.cityuserservice.domain.entity.user.UserState;
 import uz.pdp.cityuserservice.exceptions.DataNotFoundException;
-import uz.pdp.cityuserservice.repository.user.PermissionRepository;
 import uz.pdp.cityuserservice.repository.user.RoleRepository;
 import uz.pdp.cityuserservice.repository.user.UserRepository;
 import uz.pdp.cityuserservice.service.auth.JwtService;
@@ -37,8 +35,6 @@ class UserServiceTest {
 
     @Mock
     private RoleRepository roleRepository;
-    @Mock
-    private PermissionRepository permissionRepository;
 
     @Mock
     private UserRepository userRepository;
@@ -61,15 +57,13 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         initMocks(this);
-        PermissionEntity all = PermissionEntity.builder().permission("ALL").build();
-        roleRepository.save(RoleEntity.builder().role("ADMIN").permissions(List.of()).build());
+        roleRepository.save(RoleEntity.builder().role("ADMIN").build());
         userRequestDto= new UserRequestDto("user",email,password,List.of("ADMIN"),List.of("ALL"));
         userEntity=UserEntity.builder()
                 .email(email)
                 .name("user")
                 .state(UserState.ACTIVE)
                 .roles(List.of(RoleEntity.builder().build()))
-                .permissions(List.of(PermissionEntity.builder().build()))
                 .build();
         mailService.sendVerificationCode(userEntity);
 

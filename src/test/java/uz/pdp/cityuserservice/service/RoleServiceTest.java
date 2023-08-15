@@ -6,10 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 import uz.pdp.cityuserservice.domain.dto.RoleDto;
-import uz.pdp.cityuserservice.domain.entity.user.PermissionEntity;
 import uz.pdp.cityuserservice.domain.entity.user.RoleEntity;
 import uz.pdp.cityuserservice.exceptions.DataNotFoundException;
-import uz.pdp.cityuserservice.repository.user.PermissionRepository;
 import uz.pdp.cityuserservice.repository.user.RoleRepository;
 import uz.pdp.cityuserservice.service.role.RoleService;
 
@@ -27,8 +25,6 @@ class RoleServiceTest {
     private RoleDto roleDto;
     private RoleEntity roleEntity;
     @Mock
-    private PermissionRepository permissionRepository;
-    @Mock
     private ModelMapper modelMapper;
     @Mock
     private RoleRepository roleRepository;
@@ -38,12 +34,9 @@ class RoleServiceTest {
     @BeforeEach
     void setUp() {
         initMocks(this);
-        PermissionEntity tester = PermissionEntity.builder()
-                .permission("TESTER").build();
         roleDto = new RoleDto(name, List.of("TESTER"));
         roleEntity = RoleEntity.builder()
                 .role(name)
-                .permissions(List.of(tester))
                 .build();
     }
 

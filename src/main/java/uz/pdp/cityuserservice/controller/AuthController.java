@@ -62,17 +62,4 @@ public class AuthController {
     ){
         return userService.verify(userId,code);
     }
-    @GetMapping("/get/user")
-    public ResponseEntity<UserEntity> getUser(
-            @RequestParam String username
-    ) {
-        return ResponseEntity.ok(userService.getUser(username));
-    }
-
-    @GetMapping("/get/id")
-    public ResponseEntity<UserEntity> getUser(
-            @RequestParam UUID id
-    ) {
-        return ResponseEntity.ok(userService.getUserById(id));
-    }
 }

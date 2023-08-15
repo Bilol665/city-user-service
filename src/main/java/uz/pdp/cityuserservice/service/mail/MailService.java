@@ -12,7 +12,7 @@ import uz.pdp.cityuserservice.domain.dto.MailDto;
 import uz.pdp.cityuserservice.domain.entity.user.UserEntity;
 import uz.pdp.cityuserservice.domain.entity.verification.VerificationEntity;
 import uz.pdp.cityuserservice.exceptions.DataNotFoundException;
-import uz.pdp.cityuserservice.repository.VerificationRepository;
+import uz.pdp.cityuserservice.repository.verification.VerificationRepository;
 import uz.pdp.cityuserservice.repository.user.UserRepository;
 
 import java.net.URI;
