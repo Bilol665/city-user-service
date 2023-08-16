@@ -13,7 +13,6 @@ import uz.pdp.cityuserservice.domain.dto.ResetPasswordDto;
 import uz.pdp.cityuserservice.domain.dto.UserRequestDto;
 import uz.pdp.cityuserservice.domain.dto.response.ApiResponse;
 import uz.pdp.cityuserservice.domain.dto.response.JwtResponse;
-import uz.pdp.cityuserservice.domain.entity.user.PermissionEntity;
 import uz.pdp.cityuserservice.domain.entity.user.RoleEntity;
 import uz.pdp.cityuserservice.domain.entity.user.UserEntity;
 import uz.pdp.cityuserservice.domain.entity.user.UserState;
@@ -21,10 +20,9 @@ import uz.pdp.cityuserservice.domain.entity.verification.VerificationEntity;
 import uz.pdp.cityuserservice.exceptions.AuthFailedException;
 import uz.pdp.cityuserservice.exceptions.DataNotFoundException;
 import uz.pdp.cityuserservice.exceptions.NotAcceptable;
-import uz.pdp.cityuserservice.repository.VerificationRepository;
-import uz.pdp.cityuserservice.repository.user.PermissionRepository;
 import uz.pdp.cityuserservice.repository.user.RoleRepository;
 import uz.pdp.cityuserservice.repository.user.UserRepository;
+import uz.pdp.cityuserservice.repository.verification.VerificationRepository;
 import uz.pdp.cityuserservice.service.auth.JwtService;
 import uz.pdp.cityuserservice.service.mail.MailService;
 
@@ -39,7 +37,6 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository userRoleRepository;
     private final VerificationRepository verificationRepository;
-    private final PermissionRepository permissionRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final MailService mailService;
@@ -64,7 +61,6 @@ public class UserService implements UserDetailsService {
         UserEntity user = modelMapper.map(userRequestDto, UserEntity.class);
         if(checkEmail(user.getEmail())) throw new NotAcceptable("Email already exists!");
         user.setRoles(getRoleFromString(userRequestDto.getRoles()));
-//        user.setPermissions(getPermissionFromString(userRequestDto.getPermissions()));
         user.setState(UserState.UNVERIFIED);
         user.setAttempts(0);
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
@@ -74,9 +70,6 @@ public class UserService implements UserDetailsService {
     }
     private List<RoleEntity> getRoleFromString(List<String> roles) {
         return userRoleRepository.findRoleEntitiesByRoleIn(roles);
-    }
-    private List<PermissionEntity> getPermissionFromString(List<String> permission) {
-        return permissionRepository.findPermissionEntitiesByPermissionIn(permission);
     }
     private Boolean checkEmail(String email) {
         Integer integer = userRepository.countUserEntitiesByEmail(email);

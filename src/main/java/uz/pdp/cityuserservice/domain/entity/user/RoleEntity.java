@@ -17,6 +17,4 @@ public class RoleEntity  {
     @Id
     @Column(unique = true)
     String role;
-//    @ManyToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
-//    List<PermissionEntity> permissions;
 }

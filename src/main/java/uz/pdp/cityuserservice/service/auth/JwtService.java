@@ -24,11 +24,12 @@ public class JwtService {
     private long refreshToken;
 
     public String generateAccessToken(UserEntity userEntity){
+        Date date = new Date(new Date().getTime() + accessTokenExpiry);
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512,secretKey)
                 .setSubject(String.valueOf(userEntity.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime()+accessTokenExpiry))
+                .setExpiration(date)
                 .addClaims(Map.of("roles",getRoles(userEntity.getAuthorities())))
                 .compact();
     }

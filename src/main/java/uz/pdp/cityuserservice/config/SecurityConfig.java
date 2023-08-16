@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import uz.pdp.cityuserservice.filter.JwtFilterToken;
+import uz.pdp.cityuserservice.repository.token.JwtTokenRepository;
 import uz.pdp.cityuserservice.service.auth.AuthenticationService;
 import uz.pdp.cityuserservice.service.auth.JwtService;
 import uz.pdp.cityuserservice.service.user.UserService;
@@ -26,6 +27,7 @@ public class SecurityConfig {
     private final UserService auth;
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
+    private final JwtTokenRepository jwtTokenRepository;
     private final String[] roleCRUD ={"/user/role/save","/user/role/getRole","/user/role/{id}/updateRole","/user/role/{id}/deleteRole"};
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,10 +36,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/user/api/v1/auth/**").permitAll()
                 .requestMatchers(roleCRUD).hasRole("SUPER_ADMIN")
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new JwtFilterToken(jwtService,authenticationService),
+                .addFilterBefore(new JwtFilterToken(jwtService,authenticationService,jwtTokenRepository),
                         UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

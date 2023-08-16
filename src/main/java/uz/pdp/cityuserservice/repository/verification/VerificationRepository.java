@@ -1,4 +1,4 @@
-package uz.pdp.cityuserservice.repository;
+package uz.pdp.cityuserservice.repository.verification;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

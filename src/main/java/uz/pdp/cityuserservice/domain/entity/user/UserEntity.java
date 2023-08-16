@@ -25,8 +25,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private String password;
     @ManyToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     private List<RoleEntity> roles;
-//    @ManyToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
-//    private List<PermissionEntity> permissions;
     @Enumerated(EnumType.STRING)
     private UserState state;
     private int attempts;
@@ -34,7 +32,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         roles.forEach((role) -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole())));
-//        permissions.forEach((permission) -> authorities.add(new SimpleGrantedAuthority("PERMISSION_" + permission.getPermission())));
         return authorities;
     }
     @Override
