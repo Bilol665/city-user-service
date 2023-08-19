@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @Builder
 public class MailDto {
+    private static final long serialVersionUID = 123;
     String message;
     String email;
 }
