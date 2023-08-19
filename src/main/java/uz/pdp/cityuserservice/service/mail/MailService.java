@@ -14,6 +14,7 @@ import uz.pdp.cityuserservice.domain.entity.verification.VerificationEntity;
 import uz.pdp.cityuserservice.exceptions.DataNotFoundException;
 import uz.pdp.cityuserservice.repository.VerificationRepository;
 import uz.pdp.cityuserservice.repository.user.UserRepository;
+import uz.pdp.cityuserservice.service.kafka.KafkaProducer;
 
 import java.net.URI;
 import java.util.Random;
@@ -26,6 +27,7 @@ public class MailService {
     private final UserRepository userRepository;
     @Value("${services.notification-url}")
     private String notificationServiceUrl;
+    private final KafkaProducer kafkaProducer;
     private final Random random = new Random();
 
     public void sendVerificationCode(UserEntity user) {
@@ -36,7 +38,7 @@ public class MailService {
         String message = "This is your verification code to Business management service "
                 +verificationEntity.getCode()+"\nThis code will be expired in 10 minutes.\nUse this link to verify "
                 +verificationEntity.getLink();
-        sendMail(user.getEmail(),message);
+        kafkaProducer.produceMessage(new MailDto(message,user.getEmail()));
     }
     private void sendMail(String email,String message) {
         UserEntity userEntity = userRepository.findUserEntityByEmail(email).orElseThrow(

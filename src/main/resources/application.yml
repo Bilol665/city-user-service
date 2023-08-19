@@ -1,6 +1,6 @@
 
 server:
-  port: 8087
+  port: 8084
 
 spring:
   application:
@@ -17,7 +17,14 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
+  kafka:
+    topic:
+      name: notification
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: -1
 eureka:
   client:
     service-url:
@@ -27,6 +34,8 @@ eureka:
 
 services:
   notification-url: http://NOTIFICATION-SERVICE/notification
+
+
 
 jwt:
   secret:
