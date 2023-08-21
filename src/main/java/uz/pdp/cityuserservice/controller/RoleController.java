@@ -9,16 +9,14 @@ import uz.pdp.cityuserservice.domain.entity.user.RoleEntity;
 import uz.pdp.cityuserservice.service.role.RoleService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user/role")
+@RequestMapping("/user/api/v1/role")
 public class RoleController {
     private final RoleService roleService;
 
     @PostMapping("/save")
-//    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<RoleEntity>saveRole(
             @RequestBody RoleDto roleDto
     ){
@@ -30,7 +28,7 @@ public class RoleController {
         return ResponseEntity.ok(roleService.getAll());
     }
 
-    @DeleteMapping("/{name}/deleteRole")
+    @DeleteMapping("/{name}/delete")
     public ResponseEntity<HttpStatus>deleteRole(
             @PathVariable String name
     ){
@@ -38,7 +36,7 @@ public class RoleController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{name}/updateRole")
+    @PutMapping("/{name}/update")
     public ResponseEntity<RoleEntity>updateRole(
             @RequestBody RoleDto roleDto,
             @PathVariable String name

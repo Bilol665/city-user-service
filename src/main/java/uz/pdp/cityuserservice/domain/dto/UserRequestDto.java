@@ -5,8 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +19,4 @@ public class UserRequestDto {
 
     @NotBlank(message = "password must not be blank")
     private String password;
-    List<String> roles;
-    List<String> permissions;
 }

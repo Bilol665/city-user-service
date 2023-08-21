@@ -3,13 +3,11 @@ package uz.pdp.cityuserservice.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.cityuserservice.domain.dto.LoginDto;
 import uz.pdp.cityuserservice.domain.dto.ResetPasswordDto;
 import uz.pdp.cityuserservice.domain.dto.UserRequestDto;
-import uz.pdp.cityuserservice.domain.dto.Username;
 import uz.pdp.cityuserservice.domain.dto.response.ApiResponse;
 import uz.pdp.cityuserservice.domain.dto.response.JwtResponse;
 import uz.pdp.cityuserservice.domain.entity.user.UserEntity;
@@ -56,10 +54,10 @@ public class AuthController {
     }
     @GetMapping ("/verify/{userId}/{code}")
     @CrossOrigin(origins = "http://localhost:3000")
-    public String verify(
+    public ResponseEntity<ApiResponse> verify(
             @PathVariable UUID userId,
             @PathVariable String code
     ){
-        return userService.verify(userId,code);
+        return ResponseEntity.ok(userService.verify(userId,code));
     }
 }

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,5 +14,4 @@ import java.util.List;
 public class RoleDto {
     @NotBlank(message = "role name cannot be blank")
     private String role;
-    private List<String>permission;
 }
