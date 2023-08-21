@@ -28,14 +28,16 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
     private final JwtTokenRepository jwtTokenRepository;
-    private final String[] roleCRUD ={"/user/role/save","/user/role/getRole","/user/role/{id}/updateRole","/user/role/{id}/deleteRole"};
+    private final String[] roleCRUD ={"/user/api/v1/role/save","/user/api/v1/role/getRole","/user/api/v1/role/{id}/updateRole","/user/api/v1/role/{id}/deleteRole"};
+    private final String[] permitAll = {"/user/api/v1/auth/sign-up","/user/api/v1/auth/login","/user/api/v1/auth/reset-password","/user/api/v1/auth/changePassword"};
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/user/api/v1/auth/**").permitAll()
-                .requestMatchers(roleCRUD).hasRole("SUPER_ADMIN")
+                .requestMatchers(permitAll).permitAll()
+                .requestMatchers(roleCRUD).hasAnyRole("SUPER_ADMIN","ADMIN")
+                .requestMatchers("/user/api/v1/auth/verify").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
