@@ -14,4 +14,5 @@ public class JwtTokenEntity {
     @Id
     private String username;
     private String token;
+
 }

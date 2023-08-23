@@ -24,6 +24,7 @@ import uz.pdp.cityuserservice.repository.verification.VerificationRepository;
 import uz.pdp.cityuserservice.service.auth.JwtService;
 import uz.pdp.cityuserservice.service.mail.MailService;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -87,8 +88,8 @@ public class UserService implements UserDetailsService {
         mailService.sendResetPassword(user.getEmail());
         return new ApiResponse(HttpStatus.OK,true,"Success");
     }
-    public ApiResponse resetPassword(String email,ResetPasswordDto resetPasswordDto) {
-        UserEntity user = userRepository.findUserEntityByEmail(email).
+    public ApiResponse resetPassword(Principal principal,ResetPasswordDto resetPasswordDto) {
+        UserEntity user = userRepository.findUserEntityByEmail(principal.getName()).
                 orElseThrow(() -> new DataNotFoundException("User do not exist"));
         if (!Objects.equals(resetPasswordDto.getNewPassword(), resetPasswordDto.getConfirmPassword())) {
             throw new NotAcceptable("Both passwords must be same");
@@ -97,6 +98,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
         return new ApiResponse(HttpStatus.OK, true, "success");
     }
+
 
     public ApiResponse verify(UUID userId, String code) {
         UserEntity user = userRepository.findById(userId)
@@ -121,5 +123,11 @@ public class UserService implements UserDetailsService {
         user.setState(UserState.BLOCKED);
         userRepository.save(user);
         throw new NotAcceptable("Too many failed attempts. You have been blocked!");
+    }
+    public ApiResponse changeName(Principal principal,String name){
+        UserEntity userNotFound = userRepository.findUserEntityByEmail(principal.getName()).orElseThrow(() -> new DataNotFoundException("User not found"));
+        userNotFound.setName(name);
+        UserEntity save = userRepository.save(userNotFound);
+        return new ApiResponse(HttpStatus.OK,true,"success",save);
     }
 }
