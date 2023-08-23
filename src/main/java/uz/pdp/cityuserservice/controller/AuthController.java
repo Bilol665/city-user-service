@@ -14,6 +14,7 @@ import uz.pdp.cityuserservice.domain.entity.user.UserEntity;
 import uz.pdp.cityuserservice.exceptions.RequestValidationException;
 import uz.pdp.cityuserservice.service.user.UserService;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @RestController
@@ -45,12 +46,12 @@ public class AuthController {
     ){
         return ResponseEntity.ok(userService.resetPassword(userId));
     }
-    @PutMapping("/changePassword/{email}")
+    @PutMapping("/changePassword")
     public ResponseEntity<ApiResponse> changePassword(
-            @PathVariable String email,
+            Principal principal,
             @RequestBody ResetPasswordDto resetPasswordDto
     ) {
-        return ResponseEntity.ok(userService.resetPassword(email, resetPasswordDto));
+        return ResponseEntity.ok(userService.resetPassword(principal, resetPasswordDto));
     }
     @GetMapping ("/verify/{userId}/{code}")
     @CrossOrigin(origins = "http://localhost:3000")
@@ -60,4 +61,12 @@ public class AuthController {
     ){
         return ResponseEntity.ok(userService.verify(userId,code));
     }
+    @PutMapping("/changeName/{name}")
+    public ResponseEntity<ApiResponse> changeName(
+            Principal principal,
+            @PathVariable String name
+    ){
+        return ResponseEntity.ok(userService.changeName(principal,name));
+    }
+
 }
