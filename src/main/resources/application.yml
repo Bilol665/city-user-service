@@ -8,8 +8,8 @@ spring:
 
   datasource:
     username: postgres
-    password: 1221
-    url: jdbc:postgresql://localhost:5432/user_service
+    password: 1402
+    url: jdbc:postgresql://localhost:5433/user_service
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -17,14 +17,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  kafka:
-    topic:
-      name: notification
-    producer:
-      bootstrap-servers: localhost:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      acks: -1
+
 eureka:
   client:
     service-url:
@@ -34,6 +27,7 @@ eureka:
 
 services:
   notification-url: http://NOTIFICATION-SERVICE/notification
+  payment-url: http://PAYMENT-SERVICE/payment
 
 
 
@@ -41,6 +35,6 @@ jwt:
   secret:
     key:  753778214125442A472D4B6150645367566B59703373367639792F423F452848
   access:
-    expiry: 3000000
+    expiry: 30000000
   refresh:
-    expiry: 3000000
+    expiry: 30000000

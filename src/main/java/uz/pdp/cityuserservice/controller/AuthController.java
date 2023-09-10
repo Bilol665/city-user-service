@@ -20,11 +20,11 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user/api/v1/auth")
+@CrossOrigin(origins = "http://localhost:8085")
 public class AuthController {
     private final UserService userService;
 
     @PostMapping("/sign-up")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<UserEntity> signUp(
             @Valid @RequestBody UserRequestDto userCreateDto,
             BindingResult bindingResult
@@ -54,7 +54,6 @@ public class AuthController {
         return ResponseEntity.ok(userService.resetPassword(principal, resetPasswordDto));
     }
     @GetMapping ("/verify/{userId}/{code}")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ApiResponse> verify(
             @PathVariable UUID userId,
             @PathVariable String code

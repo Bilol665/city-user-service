@@ -19,6 +19,7 @@ import uz.pdp.cityuserservice.domain.entity.verification.VerificationEntity;
 import uz.pdp.cityuserservice.exceptions.AuthFailedException;
 import uz.pdp.cityuserservice.exceptions.DataNotFoundException;
 import uz.pdp.cityuserservice.exceptions.NotAcceptable;
+import uz.pdp.cityuserservice.repository.user.RoleRepository;
 import uz.pdp.cityuserservice.repository.user.UserRepository;
 import uz.pdp.cityuserservice.repository.verification.VerificationRepository;
 import uz.pdp.cityuserservice.service.auth.JwtService;
@@ -26,6 +27,7 @@ import uz.pdp.cityuserservice.service.mail.MailService;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -34,6 +36,7 @@ import java.util.UUID;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final VerificationRepository verificationRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final MailService mailService;
@@ -60,6 +63,7 @@ public class UserService implements UserDetailsService {
         user.setState(UserState.UNVERIFIED);
         user.setAttempts(0);
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        user.setRoles(List.of(roleRepository.findById("USER").orElseThrow(() -> new DataNotFoundException("Role not found!"))));
         UserEntity savedUser = userRepository.save(user);
         mailService.sendVerificationCode(savedUser);
         return savedUser;
